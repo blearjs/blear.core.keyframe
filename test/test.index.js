@@ -7,74 +7,85 @@
 
 'use strict';
 
-var animation = require('../src/index.js');
+var keyframe = require('../src/index.js');
 
 describe('测试文件', function () {
-    var divEl = null;
+    it('.create/.style@hasName', function (done) {
+        var name = 'aaaa';
+        var aaaa = keyframe.create(name, {
+            '0 1': {
+                width: 100,
+                height: 200,
+                transform: {
+                    translateX: 100,
+                    translateY: 200,
+                    rotateX: 100,
+                    rotateY: 200
+                }
+            },
+            0.5: {
+                width: 100,
+                height: 300,
+                transform: {
+                    translateX: 100,
+                    translateY: 200,
+                    rotateX: 100,
+                    rotateY: 200
+                }
+            }
+        });
 
-    var getStyle = function (el, cssKey) {
-        return getComputedStyle(el).getPropertyValue(cssKey);
-    };
+        expect(aaaa).toEqual(name);
 
-    beforeAll(function (done) {
-        animation.defaults.duration = 100;
-        divEl = document.createElement('div');
-        divEl.style.position = 'absolute';
-        divEl.style.width = '100px';
-        divEl.style.height = '100px';
-        divEl.style.background = '#fcf';
-        document.body.appendChild(divEl);
+        var style = keyframe.style(aaaa);
+
+        console.log(style);
+        expect(style).toMatch(/width:100px/);
+        expect(style).toMatch(/height:300px/);
+        expect(style).toMatch(/transform/);
+        expect(style).toMatch(/@-webkit-keyframes/);
+
         done();
     });
 
-    it('.animate@args4', function (done) {
-        console.log(divEl.style.width);
-        animation.animate(divEl, {
-            width: 200
-        }, {
-            duration: 10
-        }, function () {
-            console.log(divEl.style.width);
-            expect(getStyle(divEl, 'width')).toEqual('200px');
-            done();
-        });
-    });
 
-    it('.animate@args3.1', function (done) {
-        console.log(divEl.style.width);
-        animation.animate(divEl, {
-            width: 300
-        }, function () {
-            console.log(divEl.style.width);
-            expect(getStyle(divEl, 'width')).toEqual('300px');
-            done();
-        });
-    });
-
-    it('.animate@args3.2', function (done) {
-        console.log(divEl.style.width);
-        animation.animate(divEl, {
-            width: 400
-        }, {
-            duration: 200
-        });
-        setTimeout(function () {
-            console.log(divEl.style.width);
-            expect(getStyle(divEl, 'width')).toEqual('400px');
-            done();
-        }, 1000);
-    });
-
-    it('.animate@args2', function (done) {
-        console.log(divEl.style.width);
-        animation.animate(divEl, {
-            width: 400
+    it('.create/.style@anonymous', function (done) {
+        var name = 'aaaa';
+        var aaaa = keyframe.create({
+            '0 1': {
+                width: 100,
+                height: 200,
+                borderTextRadius: 10,
+                transform: {
+                    translateX: 100,
+                    translateY: 200,
+                    rotateX: 100,
+                    rotateY: 200
+                }
+            },
+            0.5: {
+                width: 100,
+                height: 300,
+                transform: {
+                    translateX: 100,
+                    translateY: 200,
+                    rotateX: 100,
+                    rotateY: 200
+                }
+            }
         });
 
-        setTimeout(function () {
-            console.log(divEl.style.width);
-            expect(getStyle(divEl, 'width')).toEqual('400px');
-            done();
-        }, animation.defaults.duration * 2);
+        expect(aaaa).not.toEqual(name);
+
+        var style = keyframe.style(aaaa);
+
+        console.log(style);
+        expect(style).toMatch(/width:100px/);
+        expect(style).toMatch(/height:300px/);
+        expect(style).toMatch(/transform/);
+        expect(style).toMatch(/@-webkit-keyframes/);
+        expect(style).not.toMatch(/border-text-radius/);
+
+        done();
     });
 });
