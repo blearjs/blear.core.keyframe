@@ -9,16 +9,16 @@
 'use strict';
 
 
-var access =       require('blear.utils.access');
-var typeis =       require('blear.utils.typeis');
-var object =       require('blear.utils.object');
-var array =        require('blear.utils.array');
-var string =       require('blear.utils.string');
-var random =       require('blear.utils.random');
-var date =         require('blear.utils.date');
+var access = require('blear.utils.access');
+var typeis = require('blear.utils.typeis');
+var object = require('blear.utils.object');
+var array = require('blear.utils.array');
+var string = require('blear.utils.string');
+var random = require('blear.utils.random');
+var date = require('blear.utils.date');
 var modification = require('blear.core.modification');
-var attribute =    require('blear.core.attribute');
-var selector =     require('blear.core.selector');
+var attribute = require('blear.core.attribute');
+var selector = require('blear.core.selector');
 
 var reNumber = /^(\d+?\.)?\d+$/;
 var reSperator = /\s+|,\s*|\|\s*/g;
@@ -30,17 +30,19 @@ var VENDOR_PREFIX = ['-webkit-', '-moz-', '-ms-', ''];
  * @type {{}}
  */
 var keyframesMap = {};
-var styleEl = modification.create('style');
-var head = selector.query('head')[0] || document.documentElement;
+var styleEl = modification.create('style', {
+    id: 'blear-core-keyframe'
+});
+var headEl = selector.query('head')[0] || document.documentElement;
 
-modification.insert(styleEl, head);
+modification.insert(styleEl, headEl);
 
 
 /**
  * 在 DOM 中创建一个帧动画样式
  * @param [name] {String} 帧动画名称
  * @param descriptions {Object} 帧动画帧描述
- * @returns {Object}
+ * @returns {String}
  */
 exports.create = function (name, descriptions) {
     var args = access.args(arguments);
@@ -79,7 +81,7 @@ exports.create = function (name, descriptions) {
 
     var style = '';
 
-    if (DEBUG) {
+    if (typeof DEBUG !== 'undefined' && DEBUG === true) {
         style += '/*\n' +
             ' * keyframe ' + name + '\n' +
             ' * @create at ' + date.format() + '\n' +
@@ -90,7 +92,7 @@ exports.create = function (name, descriptions) {
         style += '@' + prefix + 'keyframes ' + name + '{' + mainStyle + '}';
     });
 
-    if (DEBUG) {
+    if (typeof DEBUG !== 'undefined' && DEBUG === true) {
         style += '\n/**/\n\n';
     }
 
