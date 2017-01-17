@@ -1,6 +1,6 @@
 {
   "name": "blear.core.keyframe",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "CSS3 keyframe 生成器",
   "scripts": {
     "live": "browser-sync start --config bs-config.js",
